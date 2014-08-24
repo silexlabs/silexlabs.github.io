@@ -1,0 +1,189 @@
+<head>
+	<title>projects powered by Silex Labs</title>
+	<meta charset="UTF-8">
+	<meta name="generator" content="Silex v2.0"> <!-- leave this for stats -->
+	<script type="text/javascript" src="http://static.silex.me/2.2/jquery.js"></script>
+	<script type="text/javascript" src="http://static.silex.me/2.2/jquery-ui.js"></script>
+	<script type="text/javascript" src="http://static.silex.me/2.2/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="http://static.silex.me/2.2/pageable.js"></script>
+	<script type="text/javascript" src="http://static.silex.me/2.2/front-end.js"></script>
+	<!-- Normalize -->
+	<link href="http://static.silex.me/2.2/normalize.css" rel="stylesheet">
+	<!-- Silex style -->
+	<link href="http://static.silex.me/2.2/front-end.css" rel="stylesheet">
+
+	<style type="text/css" class="silex-style">
+/*
+	Here are the CSS styles of your website.
+
+	Bellow are some examples, like the styles which you can apply to your text in the text editor.
+
+	See this page for help on CSS
+	https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started
+
+	In the advanced "Apollo" mode, you will be able to add CSS classes to Silex elements,
+	and then apply a CSS style to it here.
+*/
+
+/* define a style for Title, Headings and Normal texts */
+.title,
+.heading1,
+.heading2,
+.heading3,
+.normal {
+  color: #666666;
+  font-family: verdana, arial;
+	margin: 0;
+}
+.title {
+  font-size: 45px;
+}
+.heading2, .heading1{
+    color: #333;
+    font-size: 20px;
+    font-weight: normal;
+}
+.normal{
+    font-size: 11px;
+}
+.full-width{
+    width: 100% !important;
+}
+.bottom{
+    bottom: 0 !important;
+    top: initial !important;
+}
+a {
+    color: #0084b4 !important;
+}
+/* boxes style */
+.block{
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+}
+.block:hover{
+    background-color: #EEEEEE !important;
+}
+.block a:hover{
+    text-decoration: inherit;
+}
+</style>
+  <script type="text/javascript" class="silex-script">////////////////////////////////////
+// github api
+$(function(){
+    $('.stats').hide();
+    $('.members').hide();
+    fillInMembers(function(){
+        $('.members').show();
+        fillInStats(function(){
+            $('.stats').show();
+        });
+    });
+    fillInProjects(function(){});
+});
+// projects
+function fillInProjects(cbk){
+    var template = $('.project').get(0);
+    var position = $(template).position();
+    var w = $(template).width();
+    var h = $(template).height();
+    var container = template.parentNode;
+    var wMax = $(container).width();
+    $(template).remove();
+    var url = 'https://api.github.com/orgs/silexlabs/repos';
+    $.getJSON(url, function(data){
+        data.sort(function(a, b){
+            return (b.stargazers_count + b.forks) - (a.stargazers_count + a.forks);
+        });
+        $.each(data, function(idx, project){
+            // replace values in the template
+            var html = template.innerHTML;
+            $.each(project, function(key, value){
+                var re = new RegExp('{{' + key + '}}', 'gi');
+                value = value || '';
+                html = html.replace(re, value);
+            });
+            // add an element
+            var element = template.cloneNode();
+            element.innerHTML = html;
+            $(container).append(element);
+            // position of the new element
+            element.style.left = position.left + 'px';
+            element.style.top = position.top + 'px';
+            // update container height
+            if ($(container).height() < position.top + h + 200){
+                $(container).height(position.top + h + 200);
+            }
+            // compute new position
+            position.left += w + 20;
+            if (position.left + w > wMax){
+                position.left = 10;
+                position.top += h + 20;
+            }
+        });
+        cbk();
+    }).fail(function() {
+        element.innerHTML = '<p class="normal">an error occured, maybe github API is down or quota is exceeded</p>';
+        cbk();
+    });
+}
+var members = [];
+// members
+function fillInMembers(cbk){
+    var element = $('.members').get(0);
+    var url = 'https://api.github.com/orgs/silexlabs/public_members';
+    $.getJSON(url, function(data){
+        // replace values in the template
+        var html = '';
+        $.each(data, function(idx, member){
+            if (html !== '') html += ' ';
+            html += '<a href="' + member.html_url + '"><img alt="' + member.login + '" sr'+'c="' + member.avatar_url + '" style="width: 40px; " /></a>';
+            members.push(member);
+        });
+        var re = new RegExp('{{contributors}}', 'gi');
+        element.innerHTML = element.innerHTML.replace(re, html);
+        cbk();
+    }).fail(function() {
+        element.innerHTML = '<p class="normal">an error occured, maybe github API is down or quota is exceeded</p>';
+        cbk();
+    });
+}
+// stats
+function fillInStats(cbk){
+    var element = $('.stats').get(0);
+    var url = 'https://api.github.com/orgs/silexlabs';
+    $.getJSON(url, function(data){
+        // add numMembers to data
+        data.numMembers = members.length;
+        // replace values in the template
+        var html = element.innerHTML;
+        $.each(data, function(key, value){
+            value = value || '';
+            var re = new RegExp('{{' + key + '}}', 'gi');
+            html = html.replace(re, value);
+        });
+        element.innerHTML = html;
+        cbk();
+    }).fail(function() {
+        element.innerHTML = '<p class="normal">an error occured, maybe github API is down or quota is exceeded</p>';
+        cbk();
+    });
+}
+</script>
+<meta name="publicationPath" content="/api/1.0/dropbox/exec/put//fdt-workspace/sites-silex/silexlabs.github.io"><style id="current-page-style">.page-page-1{display:inherit; }</style></head>
+<body style="cursor: auto; background-image: url('assets/bg.png'); background-color: rgb(255, 255, 255);" data-silex-type="container" class="silex-runtime">
+	<a id="page-page-1" data-silex-type="page" class="page-element">Page 1</a>
+	<div class="background editable-style container-element" data-silex-type="container" style="top: 5px; left: 162px; width: 960px; height: 640px; position: absolute; background-color: transparent;">
+	<div data-silex-type="container" class="editable-style container-element page-page-1 paged-element block" style="position: absolute; height: 400px; width: 220px; left: 10px; top: 20px; background-color: rgb(255, 255, 255);"><div data-silex-type="text" class="editable-style text-element full-width" style="position: absolute; height: 254px; width: 207px; top: 100px; background-color: transparent;"><div class="silex-element-content normal" style="width: 100%; height: 100%;"><h1 class="heading1" style="text-align: center;">Free<br>Open Source<br>Projects<br><br></h1><h1 class="heading1" style="text-align: center;">Powered by&nbsp;</h1><h1 class="heading1" style="text-align: center;">Silex Labs&nbsp;</h1><div style="text-align: center;"><br></div><div><div style="text-align: center;"><br></div><div style="text-align: center;">Want to help?&nbsp;</div><div style="text-align: center;"><br></div><div style="text-align: center;"><a href="http://www.silexlabs.org">Join the Community</a></div></div><div style="text-align: center;"><br></div><div style="text-align: center;">Spread the word!</div></div></div><div data-silex-type="image" class="editable-style image-element" style="position: absolute; height: 47px; width: 198px; top: 27px; left: 11px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;" data-silex-href="https://github.com/silexlabs"><img src="assets/silexlabs-moyen-grand-transparent.png" class="silex-element-content" style="width: 100%; height: 100%;"></div><div data-silex-type="html" class="editable-style html-element" style="position: absolute; height: 66px; width: 188px; top: 330px; left: 27px; background-color: transparent;"><div class="silex-element-content" style="width: 100%; height: 100%;"><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "92d4d892-d35d-40d9-9e8f-0ccfd70d0c30", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+<br>
+<span class="st_facebook_large" displaytext="Facebook"></span>
+<span class="st_twitter_large" displaytext="Tweet"></span>
+<span class="st_googleplus_large" displaytext="Google +"></span>
+<span class="st_linkedin_large" displaytext="LinkedIn"></span></div></div></div><div data-silex-type="container" class="editable-style container-element page-page-1 paged-element stats block" style="position: absolute; height: 130px; width: 220px; top: 20px; left: 250px; background-color: rgb(255, 255, 255);"><div data-silex-type="text" class="editable-style text-element" style="position: absolute; height: 106px; width: 194px; top: 10px; left: 15px; background-color: transparent;"><div class="silex-element-content normal" style="width: 100%; height: 100%;"><h2 class="heading2" style="text-align: left;">Statistics</h2><div><div><br></div><div>{{public_repos}} public repos&nbsp;</div><div><div>{{numMembers}} members</div></div></div><p class="normal"><a href="http://eepurl.com/MCCDP" class="normal">subscribe to the newsletter</a></p></div></div></div><div data-silex-type="container" class="editable-style container-element page-page-1 paged-element members block" style="position: absolute; height: 130px; width: 460px; top: 20px; left: 490px; background-color: rgb(255, 255, 255);"><div data-silex-type="text" class="editable-style text-element" style="position: absolute; height: 112px; width: 431px; top: 10px; left: 15px; background-color: transparent;"><div class="silex-element-content normal" style="width: 100%; height: 100%;"><h2 class="heading2" style="text-align: left;">Contributors</h2><div><br></div><div>{{contributors}}</div></div></div></div><div data-silex-type="container" class="editable-style container-element page-page-1 paged-element project block" style="position: absolute; height: 250px; width: 220px; top: 170px; left: 250px; background-color: rgb(255, 255, 255);"><div data-silex-type="text" class="editable-style text-element" style="position: absolute; height: 229px; width: 194px; top: 10px; left: 15px; background-color: transparent;" data-silex-href="{{html_url}}"><div class="silex-element-content normal" style="width: 100%; height: 100%;"><h2 class="heading2" style="text-align: left;">{{name}}</h2><div>{{language}}</div><div>{{forks_count}} forks</div><div>{{watchers_count}} watchers</div><div>{{open_issues_count}} issues</div><div><br></div><div><font size="2">{{description}}</font></div><div><br></div></div></div></div><div data-silex-type="container" class="editable-style container-element page-page-1 paged-element footer full-width bottom" style="position: absolute; height: 180px;
+width: 958px;
+top: 440px;
+left: 0;
+background-color: transparent;"><div data-silex-type="text" class="editable-style text-element full-width" style="position: absolute; height: 100px; width: 797px; top: 8px; left: 0px; background-color: transparent;"><div class="silex-element-content normal" style="width: 100%; height: 100%;"><div style="text-align: center;">This template is licensed under the&nbsp;Do What The F*ck You Want To Public License v2 (WTFPL-2.0)</div><div style="text-align: center;">Inspired by <a href="https://twitter.github.io/">Twitter open source projects page</a></div><div style="text-align: center;">Feel free to <a href="https://github.com/silexlabs/silexlabs.github.io">fork and contribute on github</a></div><div style="text-align: center;"><br></div></div></div></div></div>
+
+
+</body>

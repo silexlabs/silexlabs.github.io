@@ -1,0 +1,101 @@
+
+/*
+	Here are the CSS styles of your website.
+
+	Bellow are some examples, like the styles which you can apply to your text in the text editor.
+
+	See this page for help on CSS
+	https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started
+
+	In the advanced "Apollo" mode, you will be able to add CSS classes to Silex elements,
+	and then apply a CSS style to it here.
+*/
+
+/* define a style for Title, Headings and Normal texts */
+.title,
+.heading1,
+.heading2,
+.heading3,
+.normal {
+  color: #666666;
+  font-family: verdana, arial;
+	margin: 0;
+}
+.title {
+  font-size: 45px;
+}
+.heading2, .heading1{
+    color: #333;
+    font-size: 20px;
+    font-weight: normal;
+}
+.normal{
+    font-size: 11px;
+}
+.full-width{
+    width: 100% !important;
+}
+.bottom{
+    bottom: 0 !important;
+    top: initial !important;
+}
+a {
+    color: #0084b4 !important;
+}
+/* boxes style */
+.block{
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+}
+.block:hover{
+    background-color: #EEEEEE !important;
+}
+.block a:hover{
+    text-decoration: inherit;
+}
+
+.element-0{
+	cursor: auto; background-image: url('../assets/bg.png'); background-color: rgb(255, 255, 255);
+}
+.element-1{
+	top: 5px; left: 162px; width: 960px; height: 640px; position: absolute; background-color: transparent;
+}
+.element-2{
+	position: absolute; height: 400px; width: 220px; left: 10px; top: 20px; background-color: rgb(255, 255, 255);
+}
+.element-3{
+	position: absolute; height: 254px; width: 207px; top: 100px; background-color: transparent;
+}
+.element-4{
+	position: absolute; height: 47px; width: 198px; top: 27px; left: 11px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;
+}
+.element-5{
+	position: absolute; height: 66px; width: 188px; top: 330px; left: 27px; background-color: transparent;
+}
+.element-6{
+	position: absolute; height: 130px; width: 220px; top: 20px; left: 250px; background-color: rgb(255, 255, 255);
+}
+.element-7{
+	position: absolute; height: 106px; width: 194px; top: 10px; left: 15px; background-color: transparent;
+}
+.element-8{
+	position: absolute; height: 130px; width: 460px; top: 20px; left: 490px; background-color: rgb(255, 255, 255);
+}
+.element-9{
+	position: absolute; height: 112px; width: 431px; top: 10px; left: 15px; background-color: transparent;
+}
+.element-10{
+	position: absolute; height: 250px; width: 220px; top: 170px; left: 250px; background-color: rgb(255, 255, 255);
+}
+.element-11{
+	position: absolute; height: 229px; width: 194px; top: 10px; left: 15px; background-color: transparent;
+}
+.element-12{
+	position: absolute; height: 180px;
+width: 958px;
+top: 440px;
+left: 0;
+background-color: transparent;
+}
+.element-13{
+	position: absolute; height: 100px; width: 797px; top: 8px; left: 0px; background-color: transparent;
+}
